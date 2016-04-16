@@ -50,12 +50,6 @@ easyAST = {
 
 
 
-/**
-To start with...
-1. binary operators, constants, and variables
-*/
-
-
 
 function printLaTeXExpr(AST) {
   switch(AST.type){
@@ -69,6 +63,8 @@ function printLaTeXExpr(AST) {
       return printFraction(AST);
     case "relational":
       return printRelational(AST);
+    case "unaryOperator":
+      return printUnaryOperator(AST);
   }
  }
 
@@ -142,6 +138,23 @@ function printRelational(AST){
       symbol = "\\equiv";
   }
   return printLaTeXExpr(AST.leftOp) + symbol + printLaTeXExpr(AST.rightOp);
+}
+
+
+function printUnaryOperator(AST) {
+  var symbol = AST.subType;
+  switch (AST.subType){
+    case "not":
+       symbol = "\\neg";
+       break;
+    case "+/-":
+       symbol = "\\pm";
+       break;
+    case "-/+":
+       symbol = "\\mp"
+       break;
+  }
+  return "(" + symbol + printLaTeXExpr(AST.operand) + ")";
 }
 
 
