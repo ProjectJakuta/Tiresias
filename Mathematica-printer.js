@@ -33,24 +33,26 @@ function printMathematicaExpr(AST) {
     	//TODO: Stuff
     	//for each thing in argument list, 
     	var functionArgs = "";
+    	console.log(AST,AST.argument, AST.argument.length)
     	if (AST.argument.length > 0) {
-	    	AST.argument.forEach(function(arg){
-	    		functionArgs + printMathematicaExpr(arg) + ",";
-	    	});
+    		console.log(">0")
+    		for (var i = 0; i < AST.argument.length; i++) {
+	    		functionArgs += (printMathematicaExpr(AST.argument[i]) + ",");
+	    		console.log(functionArgs)
+	    	}
 	    	// remove extra "," at end of functionArgs
-    		functionArgs = functionArgs.substring(0,functionArgs.length - 2);
+    		functionArgs = functionArgs.substring(0,functionArgs.length - 1);
     	}
         return AST.name + "[" +  functionArgs	 + "]";
-        break;
     case "constant":
     	return AST.value;
-        break;
     case "latin":
     	return AST.name;
-        break;
     case "greek":
-    	return AST.name;
-        break;
+    	var letter = AST.name[0].toUpperCase()+ AST.name.substring(1)
+    	if (letter === "Pi")
+    		return letter
+    	return "\\[" + letter + "]"
     case "relational":
         switch(AST.subType) {
 			case "==": 
