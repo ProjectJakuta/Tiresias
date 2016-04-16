@@ -168,6 +168,12 @@ function printMathematicaExpr(AST) {
     		
         break;
     case "trig":
+    	if (AST.operator === "log") {
+    		return "Log[10," + printMathematicaExpr(AST.argument) + "]"
+    	}
+    	if (AST.operator === "ln") {
+    		return "Log[" + printMathematicaExpr(AST.argument) + "]"
+    	}
     	var trigFunction = "";
     	var startIndex = 0;
     	if (AST.operator.length > 4) {
@@ -176,8 +182,9 @@ function printMathematicaExpr(AST) {
     	}
     	var firstLetter = AST.operator.substring(startIndex,startIndex+1);
     	var tail = AST.operator.substring(startIndex+1);
-    	trigFunction += firstLetter + tail; 
+    	trigFunction += firstLetter.toUpperCase() + tail; 
     	return trigFunction + "[" + printMathematicaExpr(AST.argument) + "]";
+  }
 
     default:
         // TODO: error "Not a AST"
