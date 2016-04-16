@@ -263,7 +263,18 @@ parseLaTeXTokenList = function(tokenList) {
 			}
 		}
 		if(tokenList[i].type === "command") {
-			
+			if($.inArray(tokenList[i].text.toLowerCase(), [
+					'alpha','beta','gamma','delta','epsilon','zeta','eta','theta',
+					'iota','kappa','lambda','mu','nu','xi','omicron','pi','rho',
+					'sigma','tau','upsilon','phi','varphi','chi','psi','omega',
+					'digamma','varepsilon','varkappa','varsigma','vartheta','varpi',
+					'varpsi','varomega','vardelta','vargamma','varxi']) >= 0) {
+				tokenList[i] = {
+					mode: "AST",
+					type: "greek",
+					name: tokenList[i].text.replace(/^var/,'')
+				}
+			}
 		}
 	}
 	return tokenList[0]
