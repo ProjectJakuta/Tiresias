@@ -110,6 +110,9 @@ function printMathematicaExpr(AST) {
     		case "-/+":
     			"MinusPlus[" + print(AST.operand) + "]";
     			break;
+    		case "factorial":
+    			"(" + print(AST.operand) + ")!";
+    			break;
     		default:
     			// error for unknown subType of unary operator
     	}
