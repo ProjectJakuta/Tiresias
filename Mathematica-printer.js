@@ -166,6 +166,7 @@ function printMathematicaExpr(AST) {
 		
     	else {
     		// Error for unrecognized grouping symbol
+    		return "(" + printMathematicaExpr(AST.contents) + ")";
     	}
     		
         break;

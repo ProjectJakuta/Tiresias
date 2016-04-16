@@ -99,6 +99,7 @@ function printGrouping(AST) {
   } 
   if ((AST.openingSymbol === "|") && (AST.closingSymbol === "|"))
         return "abs(" + printMatlabExpr(AST.contents) + ")";
+  return "(" + printMatlabExpr(AST.contents) + ")";
 }
 
 function printTrig(AST) {
