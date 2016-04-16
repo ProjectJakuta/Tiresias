@@ -62,7 +62,16 @@ tokenizeLaTeX = function(equation, start) {
 				tokenList.push({mode: "token", type: "letter", text: equation[i]})
 				break
 			case 12:
-				tokenList.push({mode: "token", type: "other", text: equation[i]})
+				if(/[0-9.]/.exec(equation[i])) {
+					var num = ''
+					for(; /[0-9.]/.exec(equation[i]); i++) {
+						num += equation[i]
+					}
+					tokenList.push({mode: "token", type: "number", text: num})
+					i--
+				} else {
+					tokenList.push({mode: "token", type: "other", text: equation[i]})
+				}
 				break
 			case 13:
 				tokenList.push({mode: "token", type: "command", text: equation[i]})
@@ -208,8 +217,9 @@ parseLaTeXTokenList = function(tokenList) {
 		if(tokenList[i].type === "command" && $.inArray(tokenList[i].text,
 				['sin','cos','tan','sec','csc','cot','sinh','cosh','tanh',
 				 'sech','csch','coth','asin','acos','atan','asec','acsc','acot',
-				 'asinh','acosh','atanh','asech','acsch','acoth','log','ln','exp'
-				 ])>=0) {
+				 'asinh','acosh','atanh','asech','acsch','acoth','arcsin','arccos',
+				 'arctan','arcsec','arccsc','arccot','arcsinh','arccosh','arctanh',
+				 'arcsech','arccsch','arccoth','log','ln','exp'])>=0) {
 			if(tokenList[i+1].type === "space") tokenList.splice(i+1,1)
 			tokenList[i] = {
 				mode: "AST",
@@ -235,6 +245,26 @@ parseLaTeXTokenList = function(tokenList) {
 	if(tokenList.length !== 1) {
 		console.log(tokenList)
 		throw "Invalid LaTeX"
+	}
+	for(var i = 0; i < tokenList.length; i++) {
+		if(tokenList[i].mode !== "token") continue;
+		if(tokenList[i].type === "number") {
+			tokenList[i] = {
+				mode: "AST",
+				type: "constant",
+				value: tokenList[i].text
+			}
+		}
+		if(tokenList[i].type === "letter") {
+			tokenList[i] = {
+				mode: "AST",
+				type: "latin",
+				name: tokenList[i].text
+			}
+		}
+		if(tokenList[i].type === "command") {
+			
+		}
 	}
 	return tokenList[0]
 }

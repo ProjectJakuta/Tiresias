@@ -18,11 +18,8 @@ $("#submit").click(function() {try{
 		case "latex":
 			theAst = parseLaTeXExpr(rawText)
 			break;
-		case "mathematica":
-			theAst = parseMathematicaExpr(rawText)
-			break;
-		case "matlab":
-			theAst = parseMatlab(rawText)
+		case "plain":
+			theAst = parseSimpleExpr(rawText)
 			break;
 	};
 
