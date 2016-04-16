@@ -1,7 +1,19 @@
+@font-face {
+    font-family: 'Latin Modern Roman';
+    font-weight: normal;
+    src: url('http://images.clonecomputers.net/fonts/lmroman12-regular.otf') format('otf');
+}
+
+@font-face {
+    font-family: 'Latin Modern Roman';
+    font-weight: bold;
+    src: url('http://images.clonecomputers.net/fonts/lmroman12-bold.otf') format('otf');
+}
+
 body {
     margin:0;
     padding:0;
-    font-family: Papyrus, Palatino, Sans-Serif;
+    font-family: 'Latin Modern Roman', Serif;
     font-size: 20px;
     line-height: 1.5em;
     color: #523A10;
@@ -16,7 +28,11 @@ body {
     margin: 0;
     padding-top: 15px;
     font-size: 30px;
-    font-weight: bold;
+    font-weight: normal;
+}
+
+h2 {
+    font-weight: normal;
 }
 
 #left {
