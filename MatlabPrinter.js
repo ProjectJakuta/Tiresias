@@ -49,6 +49,10 @@ function printBinaryOperator(AST) {
       isInfix = false
       symbol = "mod"
       break
+    case "implicitMultiply":
+      isInfix = true
+      symbol = ""
+      break
   }
   if(isInfix) {
     return (printMatlabExpr(AST.leftOp) + symbol + printMatlabExpr(AST.rightOp))
@@ -121,21 +125,20 @@ function printFunction(AST) {
         return AST.name + "(" +  functionArgs  + ")";
 }
 
+
 function printRelational(AST) {
   switch(AST.subType) {
       case "==": 
         return "(" + printMatlabExpr(AST.LHS) + ")==(" + printMatlabExpr(AST.RHS) + ")";
-      case "<":
-        return "(" + printMatlabExpr(AST.LHS) + ")<(" + printMatlabExpr(AST.RHS) + ")";
+        return "(" + printMatlabExpr(AST.LHS) + ")==(" + printMatlabExpr(AST.RHS) + ")";
+        return "(" + printMatlabExpr(AST.LHS) + ")==(" + printMatlabExpr(AST.RHS) + ")";
       case ">":
-        return "(" + printMatlabExpr(AST.LHS) + ")>(" + printMatlabExpr(AST.RHS) + ")";
-      case "<=":
-        return "(" + printMatlabExpr(AST.LHS) + ")<=(" + printMatlabExpr(AST.RHS) + ")";
-      case ">=":
-        return "(" + printMatlabExpr(AST.LHS) + ")>=(" + printMatlabExpr(AST.RHS) + ")";
-      case "!=":
-        return "(" + printMatlabExpr(AST.LHS) + ")~=(" + printMatlabExpr(AST.RHS) + ")";
-      case "approx": 
+
         return "TildeTilde[" + printMatlabExpr(AST.LHS) + "," + printMatlabExpr(AST.RHS) + "]";
   }
+}
+
+function printFraction(AST) {
+  return "(" + printMatlabExpr(AST.numerator) + ")/(" + printMatlabExpr(AST.denominator) + ")";
+
 }
