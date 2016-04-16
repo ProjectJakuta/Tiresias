@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Tiresias</title>
+		<link rel="stylesheet" type="text/css" href="stylesheet.css">
+	</head>
+
+	<body>
+		<div id="body">
+			<div id="projectName">
+				Project Tiresias
+			</div>
+			<div id="content">
+				<p id="head">Math Converter</p>
+				<div id="left">
+					<p>Raw Input</p><br>
+					<form id="inputForm">
+						<textarea id="input" cols="40" rows="12" placeholder="Enter math formula here"></textarea><br>
+						<select id="language">
+							<option value="ast">ast</option>
+							<option value="latex">LaTeX</option>
+							<option value="mathematica">Mathematica</option>
+							<option value="matlab">MATLAB</option>
+						</select>
+						<input type="submit" id="submit">
+					</form>
+				</div>
+
+				<div id="right">
+					<p>Raw Output</p>
+					<form id="outputForm">
+						LaTeX<br>
+						<textarea id="latexOutput" cols="40" rows="12" disabled></textarea>
+						<br><br>
+						Mathematica<br>
+						<textarea id="mathematicaOutput" cols="40" rows="12" disabled></textarea>
+						<br><br>
+						MATLAB<br>
+						<textarea id="matlabOutput" cols="40" rows="12" disabled></textarea>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+		<script type="text/javascript" src="main.js"></script>
+		<!-- ADD MORE JAVASCRIPT FILES HERE -->
+	</body>
+</html>

@@ -1,0 +1,53 @@
+html {
+	font-size: 20px;
+	text-align: center;
+	font-family: Arial;
+}
+
+#body {
+	overflow: hidden;
+}
+
+#projectName {
+	font-size: 30px;
+	font-weight: bold;
+	text-align: left;
+
+	float: top;
+	height: 20%;
+
+	color: white;
+	background-color: black;
+	padding: 20px 20px 20px 20px;
+}
+
+#content {
+	overflow: hidden;
+
+	float: bottom;
+	height: 80%;
+}
+
+#head {
+	font-size: 30px;
+}
+
+#left {
+	float: left;
+	width: 50%;
+}
+
+#right {
+	float: right;
+	width: 50%;
+}
+
+textarea {
+	font-size: 16px;
+	text-align: left;
+	font-family: monospace;
+}
+
+#input {
+	font-size: 16px;
+}
