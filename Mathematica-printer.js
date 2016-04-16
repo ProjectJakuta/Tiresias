@@ -18,20 +18,25 @@ function printMathematicaExpr(AST) {
         break;
     case "function":
     	//TODO: Stuff
-    	// return AST.name + "[" + printMathematicaExpr(argument1) + ... + "]" ;
-        printMathematicaExpr();
+    	//for each thing in argument list, 
+    	var functionArgs = "";
+    	for each (arg in AST.argument) {
+    		functionArgs + printMathematicaExpr(arg) + ",";
+    	}
+    	// remove extra "," at end of functionArgs
+    	functionArgs = functionArgs.substring(0,functionArgs.length - 2);
+        return AST.name + "[" +  functionArgs	 + "]";
         break;
     case "constant":
     	return AST.value;
         break;
-    case "roman":
+    case "latin":
     	return AST.name;
         break;
     case "greek":
     	return AST.name;
         break;
     case "relational":
-    	//TODO: Stuff
         switch(AST.subType) {
 			case "==": 
 				return "(" + printMathematicaExpr(LHS) + ")==(" + printMathematicaExpr(RHS) + ")";
@@ -92,7 +97,7 @@ function printMathematicaExpr(AST) {
 				return "MinusPlus[" + printMathematicaExpr(leftOp) + "," + printMathematicaExpr(rightOp) + "]"; 
 				break;
 			default:
-				// error for unknown subType of binary Operator
+				// TODO: error for unknown subType of binary Operator
 		}
 		break;
     case "unaryOperator":
@@ -110,13 +115,16 @@ function printMathematicaExpr(AST) {
     		case "-/+":
     			"MinusPlus[" + print(AST.operand) + "]";
     			break;
+    		case "factorial":
+    			"(" + print(AST.operand) + ")!";
+    			break;
     		default:
-    			// error for unknown subType of unary operator
+    			// TODO: error for unknown subType of unary operator
     	}
         break;
     case "grouping":
-    	//TODO: Stuff
-        printMathematicaExpr();
+    	// TODO: should we check if contents are empty?
+    	return AST.openingSymbol + printMathematicaExpr(AST.contents) + AST.closingSymbol;
         break;
     case "withUnits":
     	//TODO: Stuff

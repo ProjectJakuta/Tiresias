@@ -1,8 +1,8 @@
 /* Variables conncected with HTML */
 var rawText;
 var inputLanguage;
+var theAst;
 var form = document.getElementById("inputForm");
-
 
 
 $("#submit").click(function() {
@@ -19,7 +19,7 @@ $("#submit").click(function() {
 			theAst = parseLaTeXExpr(rawText)
 			break;
 		case "mathematica":
-			theAst = parseMathematica(rawText)
+			theAst = parseMathematicaExpr(rawText)
 			break;
 		case "matlab":
 			theAst = parseMatlab(rawText)
@@ -32,8 +32,6 @@ $("#submit").click(function() {
 	try {$("textarea#matlabOutput").val(JSON.stringify(theAst))} catch(e){}
 	return false;
 });
-
-
 
 
 $(document).ready();
