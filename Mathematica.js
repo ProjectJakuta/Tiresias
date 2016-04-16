@@ -9,17 +9,17 @@
 //write f'n that prints eqn(takes in an ast)
 //  use switch statements to print each different type (very recursive)
 
-function printExpr(AST) {
+function printMathematicaExpr(AST) {
 	switch(AST.type) {
     case "combinator":
     	//TODO: Stuff
 
-        printExpr();
+        printMathematicaExpr();
         break;
     case "function":
     	//TODO: Stuff
-    	// return AST.name + "[" + printExpr(argument1) + ... + "]" ;
-        printExpr();
+    	// return AST.name + "[" + printMathematicaExpr(argument1) + ... + "]" ;
+        printMathematicaExpr();
         break;
     case "constant":
     	return AST.value;
@@ -32,24 +32,24 @@ function printExpr(AST) {
         break;
     case "relational":
     	//TODO: Stuff
-        swith(AST.subType) {
+        switch(AST.subType) {
 			case "==": 
-				return "(" + printExpr(LHS) + ")==(" + printExpr(RHS) + ")";
+				return "(" + printMathematicaExpr(LHS) + ")==(" + printMathematicaExpr(RHS) + ")";
 				break;
 			case "<":
-				return "(" + printExpr(LHS) + ")<(" + printExpr(RHS) + ")";
+				return "(" + printMathematicaExpr(LHS) + ")<(" + printMathematicaExpr(RHS) + ")";
 				break;
 			case ">":
-				return "(" + printExpr(LHS) + ")>(" + printExpr(RHS) + ")";
+				return "(" + printMathematicaExpr(LHS) + ")>(" + printMathematicaExpr(RHS) + ")";
 				break;
 			case "<=":
-				return "(" + printExpr(LHS) + ")<=(" + printExpr(RHS) + ")";
+				return "(" + printMathematicaExpr(LHS) + ")<=(" + printMathematicaExpr(RHS) + ")";
 				break;
 			case ">=":
-				return "(" + printExpr(LHS) + ")>=(" + printExpr(RHS) + ")";
+				return "(" + printMathematicaExpr(LHS) + ")>=(" + printMathematicaExpr(RHS) + ")";
 				break;
 			case "!=":
-				return "(" + printExpr(LHS) + ")!=(" + printExpr(RHS) + ")";
+				return "(" + printMathematicaExpr(LHS) + ")!=(" + printMathematicaExpr(RHS) + ")";
 				break;
 			case "~": 
 				// not supported in Mathematica
@@ -59,37 +59,37 @@ function printExpr(AST) {
     case "binaryOperator":
 		switch(AST.subType) {
 			case "implicitMultiply":
-				return "(" + printExpr(leftOp) + ") (" + printExpr(rightOp) + ")"; 
+				return "(" + printMathematicaExpr(leftOp) + ") (" + printMathematicaExpr(rightOp) + ")"; 
 				break;
 			case "*":
-				return "(" + printExpr(leftOp) + ")*(" + printExpr(rightOp) + ")"; 
+				return "(" + printMathematicaExpr(leftOp) + ")*(" + printMathematicaExpr(rightOp) + ")"; 
 				break;
 			case "+":
-				return "(" + printExpr(leftOp) + ")+(" + printExpr(rightOp) + ")"; 
+				return "(" + printMathematicaExpr(leftOp) + ")+(" + printMathematicaExpr(rightOp) + ")"; 
 				break;
 			case "-":
-				return "(" + printExpr(leftOp) + ")-(" + printExpr(rightOp) + ")"; 
+				return "(" + printMathematicaExpr(leftOp) + ")-(" + printMathematicaExpr(rightOp) + ")"; 
 				break;
 			case "/":
-				return "(" + printExpr(leftOp) + ")/(" + printExpr(rightOp) + ")"; 
+				return "(" + printMathematicaExpr(leftOp) + ")/(" + printMathematicaExpr(rightOp) + ")"; 
 				break;
 			case "^":
-				return "Exponent[" + printExpr(leftOp) + "," + printExpr(rightOp) + "]"; 
+				return "Exponent[" + printMathematicaExpr(leftOp) + "," + printMathematicaExpr(rightOp) + "]"; 
 				break;
 			case "%":
-				return "Mod[" + printExpr(leftOp) + "," + printExpr(rightOp) + "]"; 
+				return "Mod[" + printMathematicaExpr(leftOp) + "," + printMathematicaExpr(rightOp) + "]"; 
 				break;
 			case "cross":
-				return "Cross[" + printExpr(leftOp) + "," + printExpr(rightOp) + "]"; 
+				return "Cross[" + printMathematicaExpr(leftOp) + "," + printMathematicaExpr(rightOp) + "]"; 
 				break;
 			case "dot":
-				return "(" + printExpr(leftOp) + ").(" + printExpr(rightOp) + ")"; 
+				return "(" + printMathematicaExpr(leftOp) + ").(" + printMathematicaExpr(rightOp) + ")"; 
 				break;
 			case "+/-":
-				return "PlusMinus[" + printExpr(leftOp) + "," + printExpr(rightOp) + "]"; 
+				return "PlusMinus[" + printMathematicaExpr(leftOp) + "," + printMathematicaExpr(rightOp) + "]"; 
 				break;
 			case "-/+":
-				return "MinusPlus[" + printExpr(leftOp) + "," + printExpr(rightOp) + "]"; 
+				return "MinusPlus[" + printMathematicaExpr(leftOp) + "," + printMathematicaExpr(rightOp) + "]"; 
 				break;
 			default:
 				// error for unknown subType of binary Operator
@@ -116,86 +116,17 @@ function printExpr(AST) {
         break;
     case "grouping":
     	//TODO: Stuff
-        printExpr();
+        printMathematicaExpr();
         break;
     case "withUnits":
     	//TODO: Stuff
-        printExpr();
+        printMathematicaExpr();
         break;
     case "unit":
     	//TODO: Stuff
-        printExpr();
+        printMathematicaExpr();
         break;
     default:
         //print out an error "Not a AST"
-}
-
-{
-	"type": "combinator", // for integral, sum, product, etc
-	"subType": str, // integral, prod, ...
-	"contents": AST, // argument
-	"variable": AST, // thing you're summing over
-	"minLimit": AST (optional),
-	"maxLimit": AST (optional)
-}
-
-{
-	"type": "function",
-	"name": str,
-	"argument": [AST...]
-}
-
-{
-	"type": "constant",
-	"value": str
-}
-
-{
-	"type": "variable",
-	"name": str
-}
-
-{
-	"type": "relational",
-	"LHS": AST,
-	"RHS": AST,
-	"subType": str // =, >, <, etc
-}
-
-{
-	"type": "binaryOperator",
-	"leftOp": AST,
-	"rightOp": AST,
-	"subType": str // "implicitMultiply"
-}
-
-{
-	"type": "unaryOperator",
-	"isPrefix": bool,
-	"type": str,
-	"operand": AST
-}
-
-{
-	"type": "fraction",
-	"numerator": AST,
-	"denominator": AST
-}
-
-{
-	"type": "grouping",
-	"openingSymbol": str,
-	"closingSymbol": str,
-	"contents": AST
-}
-
-{
-	"type": "withUnits",
-	"number": AST,
-	"units": [{unit, power (int)}...],
-}
-
-{
-	"type": "unit",
-	(I'm not exactly sure how this should be specified...)
+	}
 }

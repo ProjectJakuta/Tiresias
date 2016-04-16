@@ -28,7 +28,7 @@ $("#submit").click(function() {
 
 	// Output
 	//$("textarea#latexOutput").val(printLaTeX(theAst))
-	//$("textarea#mathematicaOutput").val(printMathematica(theAst))
+	$("textarea#mathematicaOutput").val(printMathematicaExpr(theAst))
 	$("textarea#matlabOutput").val(JSON.stringify(theAst))
 	return false;
 });
