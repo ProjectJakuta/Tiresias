@@ -121,20 +121,18 @@ function printFunction(AST) {
         return AST.name + "(" +  functionArgs  + ")";
 }
 
+
 function printRelational(AST) {
   switch(AST.subType) {
       case "==": 
         return "(" + printMatlabExpr(AST.LHS) + ")==(" + printMatlabExpr(AST.RHS) + ")";
-      case "<":
-        return "(" + printMatlabExpr(AST.LHS) + ")<(" + printMatlabExpr(AST.RHS) + ")";
+        return "(" + printMatlabExpr(AST.LHS) + ")==(" + printMatlabExpr(AST.RHS) + ")";
+        return "(" + printMatlabExpr(AST.LHS) + ")==(" + printMatlabExpr(AST.RHS) + ")";
       case ">":
-        return "(" + printMatlabExpr(AST.LHS) + ")>(" + printMatlabExpr(AST.RHS) + ")";
-      case "<=":
-        return "(" + printMatlabExpr(AST.LHS) + ")<=(" + printMatlabExpr(AST.RHS) + ")";
-      case ">=":
-        return "(" + printMatlabExpr(AST.LHS) + ")>=(" + printMatlabExpr(AST.RHS) + ")";
-      case "!=":
-        return "(" + printMatlabExpr(AST.LHS) + ")~=(" + printMatlabExpr(AST.RHS) + ")";
-      case "approx": 
+
         return "TildeTilde[" + printMatlabExpr(AST.LHS) + "," + printMatlabExpr(AST.RHS) + "]";
+}
+
+function printFraction(AST) {
+  return \"(" + printMatlabExpr(AST.numerator) + ")/(" + printMatlabExpr(AST.denominator) + ")";
 }
