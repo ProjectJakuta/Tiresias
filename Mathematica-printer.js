@@ -11,7 +11,7 @@ function printMathematicaExpr(AST) {
     			// TODO: take care of case with no upperLimit and/or lowerLimit
     			var firstChar = AST.subType.substring(0,1);
     			return (firstChar.toUpperCase() + AST.subType.substring(1) + "[" 
-    				+ printMathematicaExpr(AST.contents) ",{" + printMathematicaExpr(variable) 
+    				+ printMathematicaExpr(AST.contents) + ",{" + printMathematicaExpr(variable) 
     				+ "," + printMathematicaExpr(minLimit)+ "," + printMathematicaExpr(maxLimit) 
     				+ "}]");
     			break;
@@ -22,7 +22,7 @@ function printMathematicaExpr(AST) {
     			break;
     		case "union":
     		case "intersect":
-    		default;
+    		default:
     			// TODO: error for unknown subType of combinator
     	}
 
@@ -33,9 +33,9 @@ function printMathematicaExpr(AST) {
     	//for each thing in argument list, 
     	var functionArgs = "";
     	if (AST.argument.length > 0) {
-	    	for (arg in AST.argument) {
+	    	AST.argument.foreach(function(arg){
 	    		functionArgs + printMathematicaExpr(arg) + ",";
-	    	}
+	    	});
 	    	// remove extra "," at end of functionArgs
     		functionArgs = functionArgs.substring(0,functionArgs.length - 2);
     	}
