@@ -12,18 +12,25 @@ $("#submit").click(function() {
 
 	// Parse into AST
 	switch(inputLanguage) {
-		case ast:
+		case "ast":
+			theAst = parseRawAstExpr(rawText)
 			break;
-		case latex:
+		case "latex":
+			theAst = parseLaTeXExpr(rawText)
 			break;
-		case mathematica:
+		case "mathematica":
+			theAst = parseMathematica(rawText)
 			break;
-		case matlab:
+		case "matlab":
+			theAst = parseMatlab(rawText)
 			break;
 	};
 
 	// Output
-
+	//$("textarea#latexOutput").val(printLaTeX(theAst))
+	//$("textarea#mathematicaOutput").val(printMathematica(theAst))
+	$("textarea#matlabOutput").val(JSON.stringify(theAst))
+	return false;
 });
 
 
