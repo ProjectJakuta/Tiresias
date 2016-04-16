@@ -1,7 +1,5 @@
 
 
-
-
 function printLaTeXExpr(AST) {
   switch(AST.type){
     case "constant":
@@ -22,6 +20,12 @@ function printLaTeXExpr(AST) {
       return printCombinator(AST);
     case "trig":
       return printTrig(AST);
+    case "greek":
+      return printGreek(AST);
+    case "symbol":
+      return printSymbol(AST);
+    case "function":
+      return printFunction(AST);
   }
   return "";
  }
@@ -34,27 +38,33 @@ function printBinaryOperator(AST) {
   switch(AST.subType){
     case "*":
     case "cross":
-      symbol =  "\\times";
+      symbol =  "\\times ";
       break;
     case "dot":
-      symbol = "\\cdot";
+      symbol = "\\cdot ";
       break;
     case "+/-":
-      symbol = "\\pm";
+      symbol = "\\pm ";
     case "-/+":
-      symbol = "\\mp";
+      symbol = "\\mp ";
       break;
     case "%":
-      symbol = "\\mod";
+      symbol = "\\mod ";
+      break;
+    case "intersect":
+      symbol = "\\cap ";
+      break;
+    case "union":
+      symbol = "\\cup ";
       break;
     case "nthroot":
-      return "\\sqrt[" + printLaTeXExpr(AST.leftOp) + "]{" + printLaTeXExpr(AST.rightOp) + "}"; 
+      return "\\sqrt [" + printLaTeXExpr(AST.leftOp) + "]{" + printLaTeXExpr(AST.rightOp) + "}"; 
     case "implicitMultiply":
       printLaTeXExpr(AST.leftOp) + printLaTeXExpr(AST.rightOp);
     case "^":
       return printLaTeXExpr(AST.leftOp) + "^{" + printLaTeXExpr(AST.rightOp) + "}";
   }
-  return "(" + printLaTeXExpr(AST.leftOp) + symbol + printLaTeXExpr(AST.rightOp) + ")";
+  return printLaTeXExpr(AST.leftOp) + symbol + printLaTeXExpr(AST.rightOp);
 }
 
 
@@ -86,18 +96,18 @@ function printRelational(AST){
     case "==":
       symbol = "=";
     case ">=":
-      symbol = "\\geq";
+      symbol = "\\geq ";
       break;
     case "<=":
-      symbol = "\\leq";
+      symbol = "\\leq ";
     case "!=":
-      symbol = "\\neq";
+      symbol = "\\neq ";
     case "proportional":
-      symbol = "\\propto";
+      symbol = "\\propto ";
     case "congruent":
-      symbol = "\\equiv";
+      symbol = "\\equiv ";
     case "approx":
-      symbol = "\\approx";
+      symbol = "\\approx ";
   }
   return printLaTeXExpr(AST.leftOp) + symbol + printLaTeXExpr(AST.rightOp);
 }
@@ -108,18 +118,18 @@ function printUnaryOperator(AST) {
   var postSymbol = "";
   switch (AST.subType){
     case "not":
-       preSymbol = "\\neg";
+       preSymbol = "\\neg ";
        break;
     case "-":
       preSymbol = "-";
     case "+/-":
-       preSymbol = "\\pm";
+       preSymbol = "\\pm ";
        break;
     case "-/+":
-       preSymbol = "\\mp";
+       preSymbol = "\\mp ";
        break;
     case "factorial":
-      postSymbol = "!";
+      postSymbol = "! ";
       break;
     case "sqrt":
       return "\\sqrt{" + printLaTeXExpr(AST.operand) + "}" ;
@@ -129,7 +139,10 @@ function printUnaryOperator(AST) {
 
 
 function printGrouping(AST){
-  return AST.openingSymbol + printLaTeXExpr(AST.contents) + AST.closingSymbol;
+  if (AST.openingSymbol === "(" || AST.openingSymbol === "[" || AST.closingSymbol === ")" || AST.closingSymbol === "]") {
+    
+  }
+  return "\\left(" + printLaTeXExpr(AST.contents) + "\\right)";
 }
 
 
@@ -150,32 +163,32 @@ function printCombinator(AST){
   var contents = printLaTeXExpr(AST.contents);
   switch(AST.subType){
     case "integral":
-      symbol = "\\int";
+      symbol = "\\int ";
       contents = contents + " d" + printLaTeXExpr(AST.variable); 
       break;
     case "sum":
-      symbol = "\\sum";
+      symbol = "\\sum ";
       break;
     case "product":
-      symbol = "\\prod";
+      symbol = "\\prod ";
       break; 
     case "limsup":
-      symbol = "\\limsup";
+      symbol = "\\limsup ";
       minLimit = printLaTeXExpr(variable) + " \\to " + minLimit;
       break;
     case "lim":
-      symbol = "\\lim";
+      symbol = "\\lim ";
       minLimit = printLaTeXExpr(variable) + " \\to " + minLimit;
       break;
     case "liminf":
-      symbol = "\\liminf";
+      symbol = "\\liminf ";
       minLimit = printLaTeXExpr(variable) + " \\to " + minLimit;
       break;
     case "union":
-      symbol = "\\cup"
+      symbol = "\\cup "
       break;
     case "intersect":
-      symbol = "\\cap"
+      symbol = "\\cap "
       break;
   }
   return symbol + "_{" + minLimit + "}^{" + maxLimit + "}" + contents;
@@ -185,3 +198,38 @@ function printCombinator(AST){
 function printTrig(AST) {
   return "\\" + AST.operator + "{(" + printLaTeXExpr(AST.argument) + ")}";
 }
+
+function printGreek(AST) {
+  return "\\" + AST.name + " ";
+}
+
+
+function printSymbol(AST){
+  switch(AST.character){
+    case "infinity":
+      return "\\infty ";
+    case "rightarrow":
+      return "\\rightarrow ";
+    case "leftarrow":
+      return "\\leftarrow ";
+    case "ellipsis":
+      return "\\cdots ";
+    case "partial":
+      return "\\partial";
+  }
+}
+
+
+
+function printFunction(AST) {
+  if (AST.argument.length == 0) {
+    return AST.name;
+  } 
+  var returnString = AST.name + "(";
+  for (i = 0; i < AST.argument.length-1; i++) {
+    returnString += (printLaTeXExpr(AST.argument[i]) + ", ");
+  }
+  returnString += (printLaTeXExpr(AST.argument[AST.argument.length - 1]) + ")");
+  return returnString;
+}
+
