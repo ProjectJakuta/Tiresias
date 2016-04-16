@@ -50,6 +50,7 @@ tokenizeLaTeX = function(equation, start) {
 			case 5:
 			case 10:
 				tokenList.push({mode: "token", type: "space", text: equation[i]})
+				break
 			case 7:
 				tokenList.push({mode: "token", type: "superscript"})
 				break
@@ -209,11 +210,12 @@ parseLaTeXTokenList = function(tokenList) {
 				 'sech','csch','coth','asin','acos','atan','asec','acsc','acot',
 				 'asinh','acosh','atanh','asech','acsch','acoth','log','ln','exp'
 				 ])>=0) {
+			if(tokenList[i+1].type === "space") tokenList.splice(i+1,1)
 			tokenList[i] = {
 				mode: "AST",
-				type: "builtInFunction",
+				type: "trig",
 				operator: tokenList[i].text,
-				argument: tokenList[i+1]
+				argument: ensureLaTeXParsed(tokenList[i+1])
 			}
 			tokenList.splice(i+1,1)
 			i--
@@ -225,7 +227,7 @@ parseLaTeXTokenList = function(tokenList) {
 				mode: "AST",
 				type: "function",
 				name: tokenList[i].text,
-				argument: tokenList[i+1]
+				argument: [tokenList[i+1].contents]
 			}
 			tokenList.splice(i+1,1)
 		}
