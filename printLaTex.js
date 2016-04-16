@@ -1,4 +1,5 @@
 
+
 function printLaTeXExpr(AST) {
   switch(AST.type){
     case "constant":
@@ -202,9 +203,9 @@ function printCombinator(AST){
   return symbol + "_{" + minLimit + "}^{" + maxLimit + "}" + contents;
 }
 
-
+//Trig, log, ln
 function printTrig(AST) {
-  return "\\" + AST.operator + "{(" + printLaTeXExpr(AST.argument) + ")}";
+  return "\\" + AST.operator + "{" + printLaTeXExpr(AST.argument) + "}";
 }
 
 function printGreek(AST) {
@@ -240,4 +241,3 @@ function printFunction(AST) {
   returnString += (printLaTeXExpr(AST.argument[AST.argument.length - 1]) + ")");
   return returnString;
 }
-
