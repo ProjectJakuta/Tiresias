@@ -6,22 +6,24 @@ function printMathematicaExpr(AST) {
     case "combinator":
     	switch(AST.subType) {
     		case "integral":
+    			// TODO: take care of case with no upperLimit and/or lowerLimit
+    			return ("Integrate[" + printMathematicaExpr(AST.contents) + ",{" 
+    				+ printMathematicaExpr(AST.variable) + "," + printMathematicaExpr(AST.minLimit)
+    				+ "," + printMathematicaExpr(AST.maxLimit) + "}]");
     		case "sum":
+    			// TODO: take care of case with no upperLimit and/or lowerLimit
+    			return ("Sum[" + printMathematicaExpr(AST.contents) + ",{" 
+    				+ printMathematicaExpr(AST.variable) + "," + printMathematicaExpr(AST.minLimit)
+    				+ "," + printMathematicaExpr(AST.maxLimit) + "}]");
     		case "product":
     			// TODO: take care of case with no upperLimit and/or lowerLimit
-    			var firstChar = AST.subType.substring(0,1);
-    			return (firstChar.toUpperCase() + AST.subType.substring(1) + "[" 
-    				+ printMathematicaExpr(AST.contents) + ",{" + printMathematicaExpr(variable) 
-    				+ "," + printMathematicaExpr(minLimit)+ "," + printMathematicaExpr(maxLimit) 
-    				+ "}]");
-    			break;
+    			return ("Product[" + printMathematicaExpr(AST.contents) + ",{" 
+    				+ printMathematicaExpr(AST.variable) + "," + printMathematicaExpr(AST.minLimit)
+    				+ "," + printMathematicaExpr(AST.maxLimit) + "}]");
     		case "lim":
     			return ("Limit[(" + printMathematicaExpr(AST.contents) + ")," 
     				+ printMathematicaExpr(AST.variable) + "->" 
     				+ printMathematicaExpr(AST.minLimit) + "]");
-    			break;
-    		case "union":
-    		case "intersect":
     		default:
     			// TODO: error for unknown subType of combinator
     	}
@@ -112,12 +114,21 @@ function printMathematicaExpr(AST) {
 					+ printMathematicaExpr(AST.rightOp) + "]"); 
 			case "subscript":
 				return ("Subscript[" + printMathematicaExpr(AST.leftOp) + "," 
+					+ printMathematicaExpr(AST.rightOp) + "]");  
+			case "superscript":
+				return ("Superscript[" + printMathematicaExpr(AST.leftOp) + "," 
 					+ printMathematicaExpr(AST.rightOp) + "]"); 
 			case "nthroot":
 				// rightOp = argument
 				// Note: square root is a unary operator
 				return ("Surd[" + printMathematicaExpr(AST.rightOp) + "," 
-					+ printMathematicaExpr(AST.leftOp) + "]");
+					+ printMathematicaExpr(AST.leftOp) + "]"); 
+			case "union":
+				return ("Union[" + printMathematicaExpr(AST.leftOp) + "," 
+					+ printMathematicaExpr(AST.rightOp) + "]");  
+			case "intersect":
+				return ("Intersection[" + printMathematicaExpr(AST.leftOp) + "," 
+					+ printMathematicaExpr(AST.rightOp) + "]"); 
 			default:
 				// TODO: error for unknown subType of binary Operator
 		}
@@ -143,10 +154,18 @@ function printMathematicaExpr(AST) {
         break;
     case "fraction":
     	//TODO: Stuff
-    	break;
+    	return ("FractionBox[\"" + printMathematicaExpr(AST.numerator) 
+    		+ "\",\"" + printMathematicaExpr(AST.denominator) + "\"]");
     case "grouping":
     	// TODO: should we check if contents are empty?
-    	return AST.openingSymbol + printMathematicaExpr(AST.contents) + AST.closingSymbol;
+    	if (((AST.openingSymbol === "(") || (AST.openingSymbol === "[") 
+    		|| (AST.openingSymbol === "{")) 
+    		&& ((AST.closingSymbol === ")") || (AST.closingSymbol === "]") 
+    		|| (AST.closingSymbol === "}") )) {
+				return "(" + printMathematicaExpr(AST.contents) + ")";
+    		} 
+    	if ((AST.openingSymbol === "|") && (AST.closingSymbol === "|"))
+    		return "Abs[" + printMathematicaExpr(AST.contents) + "]";
         break;
     case "withUnits":
     	//TODO: Stuff
