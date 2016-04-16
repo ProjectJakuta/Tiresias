@@ -27,9 +27,8 @@ function printMathematicaExpr(AST) {
     		default:
     			// TODO: error for unknown subType of combinator
     	}
-
-        printMathematicaExpr();
         break;
+
     case "function":
     	//TODO: Stuff
     	//for each thing in argument list, 
@@ -56,23 +55,19 @@ function printMathematicaExpr(AST) {
         switch(AST.subType) {
 			case "==": 
 				return "(" + printMathematicaExpr(AST.LHS) + ")==(" + printMathematicaExpr(AST.RHS) + ")";
-				break;
 			case "<":
 				return "(" + printMathematicaExpr(AST.LHS) + ")<(" + printMathematicaExpr(AST.RHS) + ")";
-				break;
 			case ">":
 				return "(" + printMathematicaExpr(AST.LHS) + ")>(" + printMathematicaExpr(AST.RHS) + ")";
-				break;
 			case "<=":
 				return "(" + printMathematicaExpr(AST.LHS) + ")<=(" + printMathematicaExpr(AST.RHS) + ")";
-				break;
 			case ">=":
 				return "(" + printMathematicaExpr(AST.LHS) + ")>=(" + printMathematicaExpr(AST.RHS) + ")";
-				break;
 			case "!=":
 				return "(" + printMathematicaExpr(AST.LHS) + ")!=(" + printMathematicaExpr(AST.RHS) + ")";
-				break;
-			case "~": 
+			case "approx": 
+				return "TildeTilde[" + printMathematicaExpr(AST.LHS) + "," + printMathematicaExpr(AST.RHS) + "]";
+			default:
 				// not supported in Mathematica
 				break;
 		}
@@ -166,16 +161,25 @@ function printMathematicaExpr(AST) {
     		} 
     	if ((AST.openingSymbol === "|") && (AST.closingSymbol === "|"))
     		return "Abs[" + printMathematicaExpr(AST.contents) + "]";
+		
+    	else {
+    		// Error for unrecognized grouping symbol
+    	}
+    		
         break;
-    case "withUnits":
-    	//TODO: Stuff
-        printMathematicaExpr();
-        break;
-    case "unit":
-    	//TODO: Stuff
-        printMathematicaExpr();
-        break;
+    case "trig":
+    	var trigFunction = "";
+    	var startIndex = 0;
+    	if (AST.operator.length > 4) {
+			trigFunction += "Arc";
+			startIndex = 3 
+    	}
+    	var firstLetter = AST.operator.substring(startIndex,startIndex+1);
+    	var tail = AST.operator.substring(startIndex+1);
+    	trigFunction += firstLetter + tail; 
+    	return trigFunction + "[" + printMathematicaExpr(AST.argument) + "]";
+
     default:
-        //print out an error "Not a AST"
+        // TODO: error "Not a AST"
 	}
 }
