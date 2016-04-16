@@ -34,7 +34,7 @@ function printMathematicaExpr(AST) {
     	//for each thing in argument list, 
     	var functionArgs = "";
     	if (AST.argument.length > 0) {
-	    	AST.argument.foreach(function(arg){
+	    	AST.argument.forEach(function(arg){
 	    		functionArgs + printMathematicaExpr(arg) + ",";
 	    	});
 	    	// remove extra "," at end of functionArgs
@@ -184,8 +184,6 @@ function printMathematicaExpr(AST) {
     	var tail = AST.operator.substring(startIndex+1);
     	trigFunction += firstLetter.toUpperCase() + tail; 
     	return trigFunction + "[" + printMathematicaExpr(AST.argument) + "]";
-  }
-
     default:
         // TODO: error "Not a AST"
 	}

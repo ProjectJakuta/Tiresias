@@ -227,7 +227,7 @@ parseLaTeXTokenList = function(tokenList) {
 				mode: "AST",
 				type: "function",
 				name: tokenList[i].text,
-				argument: tokenList[i+1]
+				argument: [tokenList[i+1].contents]
 			}
 			tokenList.splice(i+1,1)
 		}
