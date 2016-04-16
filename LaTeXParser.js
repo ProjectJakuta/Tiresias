@@ -71,12 +71,16 @@ tokenizeLaTeX = function(equation, start) {
 				i--
 				break
 			default:
-				console.log(equation[i], getCatcode(equation[i]), tokenList)
 				throw ("Illegal token: " + equation[i] + " (catcode "+getCatcode(equation[i])+")")
 		}
 	}
 	if(start > 0) throw "Too many opening curly brackets"
 	return tokenList
+}
+
+ensureLaTeXParsed = function(token) {
+	if(token.mode === "token") return parseLaTeXTokenList([token]);
+	return token;
 }
 
 parseLaTeXTokenList = function(tokenList) {
@@ -85,10 +89,59 @@ parseLaTeXTokenList = function(tokenList) {
 		if(tokenList[i].type === "command") {
 			switch(tokenList[i].name) {
 				case "frac": case "dfrac": case "tfrac": case "rfrac": case "sfrac":
+					tokenList[i] = {
+						mode: "ASP",
+						type: "fraction",
+						numerator: ensureLaTeXParsed(tokenList[i+1]),
+						denominator: ensureLaTeXParsed(tokenList[i+2])
+					}
+					tokenList.splice(i+1,2)
+					break
 				case "sqrt":
-				case "sin": case "cos": case "tan": case "acos": case "asin": case "atan":
-				case "":
+					if(tokenList[i+1].mode === "token" &&
+							tokenList[i+1].type === "other" &&
+							tokenList[i+1].value === "[") {
+						var endIndex = null
+						for(var j = i+2; j < tokenList.length; j++) {
+							if(tokenList[j].mode === "token" &&
+									tokenList[j].type === "other" &&
+									tokenList[j].value === "]") {
+								endIndex = j
+								break
+							}
+						}
+						if(endIndex === null) {
+							tokenList[i] = {
+								mode: "ASP",
+								type: "unaryOperator",
+								subType: "sqrt",
+								operand: ensureLaTeXParsed(tokenList[i+1])
+							}
+							tokenList.splice(i+1,1)
+						} else {
+							tokenList[i] = {
+								mode: "ASP",
+								type: "binaryOperator",
+								subType: "nthroot",
+								rightOp: ensureLaTeXParsed(tokenList[j+1]),
+								leftOp: parseLaTeXTokenList(tokenList.slice(i+2,j))
+							}
+							tokenList.splice(i+1,j-i)
+						}
+					} else {
+						tokenList[i] = {
+							mode: "ASP",
+							type: "unaryOperator",
+							subType: "sqrt",
+							operand: ensureLaTeXParsed(tokenList[i+1])
+						}
+						tokenList.splice(i+1,1)
+					}
+					break
+				case "left":
+				case "right":
 			}
 		}
 	}
+	return tokenList[0]
 }
