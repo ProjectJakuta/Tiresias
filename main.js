@@ -28,7 +28,7 @@ $("#submit").click(function() {try{
 	try {
 		$("textarea#mathematicaOutput").val(printMathematicaExpr(theAst))
 	}catch(e){console.log(e)}
-	try {$("textarea#matlabOutput").val(JSON.stringify(theAst))}catch(e){console.log(e)}
+	try {$("textarea#matlabOutput").val(printMatlabExpr(theAst))}catch(e){console.log(e)}
 	return false;
 }catch(e){console.log(e);return false}});
 

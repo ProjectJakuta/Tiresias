@@ -50,11 +50,11 @@ function printBinaryOperator(AST) {
       symbol = "mod"
       break
   }
-  if isInfix {
+  if(isInfix) {
     return (printMatlabExpr(AST.leftOp) + symbol + printMatlabExpr(AST.rightOp))
-  }
-  else
+  }else{
     return (symbol + "(" + printMatlabExpr(AST.leftOp) + "," + printMatlabExpr(AST.rightOp) + ")")
+  }
 }
 
 function printConstant(AST) {
@@ -137,4 +137,5 @@ function printRelational(AST) {
         return "(" + printMatlabExpr(AST.LHS) + ")~=(" + printMatlabExpr(AST.RHS) + ")";
       case "approx": 
         return "TildeTilde[" + printMatlabExpr(AST.LHS) + "," + printMatlabExpr(AST.RHS) + "]";
+  }
 }

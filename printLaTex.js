@@ -3,29 +3,29 @@
 function printLaTeXExpr(AST) {
   switch(AST.type){
     case "constant":
-      return printConstant(AST);
+      return printLConstant(AST);
     case "binaryOperator":
-      return printBinaryOperator(AST);
+      return printLBinaryOperator(AST);
     case "latin":
-      return printLatin(AST);
+      return printLLatin(AST);
     case "fraction":
-      return printFraction(AST);
+      return printLFraction(AST);
     case "relational":
-      return printRelational(AST);
+      return printLRelational(AST);
     case "unaryOperator":
-      return printUnaryOperator(AST);
+      return printLUnaryOperator(AST);
     case "grouping":
-      return printGrouping(AST);
+      return printLGrouping(AST);
     case "combinator":
-      return printCombinator(AST);
+      return printLCombinator(AST);
     case "trig":
-      return printTrig(AST);
+      return printLTrig(AST);
     case "greek":
-      return printGreek(AST);
+      return printLGreek(AST);
     case "symbol":
-      return printSymbol(AST);
+      return printLSymbol(AST);
     case "function":
-      return printFunction(AST);
+      return printLFunction(AST);
   }
   return "";
  }
@@ -33,7 +33,7 @@ function printLaTeXExpr(AST) {
 
 //
 //Evaluates left, prints operator, evaluates right
-function printBinaryOperator(AST) {
+function printLBinaryOperator(AST) {
   var symbol = AST.subType
   switch(AST.subType){
     case "*":
@@ -79,21 +79,21 @@ function printBinaryOperator(AST) {
 
 
 //Just gives the value
-function printConstant(AST) {
+function printLConstant(AST) {
   return AST.value;
 }
 
 
-function printLatin(AST) {
+function printLLatin(AST) {
   return AST.name;
 }
 
 
-function printFraction(AST) {
+function printLFraction(AST) {
   return "\\frac{" + printLaTeXExpr(AST.numerator) + "}{" + printLaTeXExpr(AST.denominator) + "}";
 }
 
-function printRelational(AST){
+function printLRelational(AST){
   var symbol = AST.subType;
   switch(AST.subType){
     case "==":
@@ -116,7 +116,7 @@ function printRelational(AST){
 }
 
 
-function printUnaryOperator(AST) {
+function printLUnaryOperator(AST) {
   var preSymbol = "";
   var postSymbol = "";
   switch (AST.subType){
@@ -142,7 +142,7 @@ function printUnaryOperator(AST) {
 }
 
 
-function printGrouping(AST){
+function printLGrouping(AST){
   if (AST.openingSymbol === "{"){
     AST.openingSymbol = "\\" + AST.openingSymbol;
     AST.closingSymbol = "\\" + AST.closingSymbol; 
@@ -159,7 +159,7 @@ function printGrouping(AST){
   }
 
 
-function printCombinator(AST){
+function printLCombinator(AST){
   var symbol;
   var minLimit = "";
   var maxLimit = "";
@@ -208,16 +208,16 @@ function printCombinator(AST){
 }
 
 //Trig, log, ln
-function printTrig(AST) {
+function printLTrig(AST) {
   return "\\" + AST.operator + "{" + printLaTeXExpr(AST.argument) + "}";
 }
 
-function printGreek(AST) {
+function printLGreek(AST) {
   return "\\" + AST.name + " ";
 }
 
 
-function printSymbol(AST){
+function printLSymbol(AST){
   switch(AST.character){
     case "infinity":
       return "\\infty ";
@@ -234,7 +234,7 @@ function printSymbol(AST){
 
 
 
-function printFunction(AST) {
+function printLFunction(AST) {
   if (AST.argument.length == 0) {
     return AST.name;
   } 
