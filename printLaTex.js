@@ -1,9 +1,5 @@
 
 
-  
-
-
-
 function printLaTeXExpr(AST) {
   switch(AST.type){
     case "constant":
@@ -28,6 +24,8 @@ function printLaTeXExpr(AST) {
       return printGreek(AST);
     case "symbol":
       return printSymbol(AST);
+    case "function":
+      return printFunction(AST);
   }
   return "";
  }
@@ -223,4 +221,15 @@ function printSymbol(AST){
 
 
 
+function printFunction(AST) {
+  if (AST.argument.length == 0) {
+    return AST.name;
+  } 
+  var returnString = AST.name + "(";
+  for (i = 0; i < AST.argument.length-1; i++) {
+    returnString += (printLaTeXExpr(AST.argument[i]) + ", ");
+  }
+  returnString += (printLaTeXExpr(AST.argument[AST.argument.length - 1]) + ")");
+  return returnString;
+}
 

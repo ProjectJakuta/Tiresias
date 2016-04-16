@@ -3,7 +3,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <title>Tiresias Math Converter</title>
-        <link rel="stylesheet" type="text/css" href="stylesheet.css"> 
+        <link rel="stylesheet" type="text/css" href="stylesheet.css">
     </head>
     
     <body>      
@@ -20,12 +20,15 @@
                     <form id="inputForm">
                         <br>
                         <textarea id="input" rows="10" placeholder="Enter math formula here"></textarea><br>
-                        <select id="language">
-                            <option value="ast">ast</option>
-                            <option value="latex">LaTeX</option>
-                            <option value="mathematica">Mathematica</option>
-                            <option value="matlab">MATLAB</option>
-                        </select>
+
+                        <div id="dropdown">
+                            <select id="language">
+                                <option value="ast">ast</option>
+                                <option value="latex">LaTeX</option>
+                                <option value="mathematica">Mathematica</option>
+                                <option value="matlab">MATLAB</option>
+                            </select>
+                        </div>
                         <input type="submit" id="submit">
                     </form>
                 </div>
