@@ -31,15 +31,16 @@ tokenizeLaTeX = function(equation, start) {
 			case 0:
 				var cmdName = ""
 				i++
-				for(;i < equation.length && getCatcode(equation[i]) == 11; i++) {
+				do {
 					cmdName += equation[i]
-				}
+					i++
+				} while(i < equation.length && getCatcode(equation[i]) == 11)
 				i--
-				tokenList.push({mode: "token", type: "command", name: cmdName})
+				tokenList.push({mode: "token", type: "command", text: cmdName})
 				break
 			case 1:
 				subgroup = tokenizeLaTeX(equation, i+1)
-				tokenList.push({mode: "ASP", value: parseLaTeXTokenList(subgroup.tl)})
+				tokenList.push({mode: "AST", text: parseLaTeXTokenList(subgroup.tl)})
 				i = subgroup.end
 				break
 			case 2:
@@ -57,13 +58,13 @@ tokenizeLaTeX = function(equation, start) {
 				break
 			case 9: break
 			case 11:
-				tokenList.push({mode: "token", type: "letter", value: equation[i]})
+				tokenList.push({mode: "token", type: "letter", text: equation[i]})
 				break
 			case 12:
-				tokenList.push({mode: "token", type: "other", value: equation[i]})
+				tokenList.push({mode: "token", type: "other", text: equation[i]})
 				break
 			case 13:
-				tokenList.push({mode: "token", type: "command", name: equation[i]})
+				tokenList.push({mode: "token", type: "command", text: equation[i]})
 				break
 			case 14:
 				i++
@@ -87,10 +88,10 @@ parseLaTeXTokenList = function(tokenList) {
 	for(var i = 0; i < tokenList.length; i++) {
 		if(tokenList[i].mode !== "token") continue;
 		if(tokenList[i].type === "command") {
-			switch(tokenList[i].name) {
+			switch(tokenList[i].text) {
 				case "frac": case "dfrac": case "tfrac": case "rfrac": case "sfrac":
 					tokenList[i] = {
-						mode: "ASP",
+						mode: "AST",
 						type: "fraction",
 						numerator: ensureLaTeXParsed(tokenList[i+1]),
 						denominator: ensureLaTeXParsed(tokenList[i+2])
@@ -100,19 +101,19 @@ parseLaTeXTokenList = function(tokenList) {
 				case "sqrt":
 					if(tokenList[i+1].mode === "token" &&
 							tokenList[i+1].type === "other" &&
-							tokenList[i+1].value === "[") {
+							tokenList[i+1].text === "[") {
 						var endIndex = null
 						for(var j = i+2; j < tokenList.length; j++) {
 							if(tokenList[j].mode === "token" &&
 									tokenList[j].type === "other" &&
-									tokenList[j].value === "]") {
+									tokenList[j].text === "]") {
 								endIndex = j
 								break
 							}
 						}
 						if(endIndex === null) {
 							tokenList[i] = {
-								mode: "ASP",
+								mode: "AST",
 								type: "unaryOperator",
 								subType: "sqrt",
 								operand: ensureLaTeXParsed(tokenList[i+1])
@@ -120,7 +121,7 @@ parseLaTeXTokenList = function(tokenList) {
 							tokenList.splice(i+1,1)
 						} else {
 							tokenList[i] = {
-								mode: "ASP",
+								mode: "AST",
 								type: "binaryOperator",
 								subType: "nthroot",
 								rightOp: ensureLaTeXParsed(tokenList[j+1]),
@@ -130,7 +131,7 @@ parseLaTeXTokenList = function(tokenList) {
 						}
 					} else {
 						tokenList[i] = {
-							mode: "ASP",
+							mode: "AST",
 							type: "unaryOperator",
 							subType: "sqrt",
 							operand: ensureLaTeXParsed(tokenList[i+1])
@@ -139,7 +140,34 @@ parseLaTeXTokenList = function(tokenList) {
 					}
 					break
 				case "left":
+					var endIndex = null
+					var depth = 1
+					for(var j = i+2; j < tokenList.length; j++) {
+						if(tokenList[j].mode === "token" && tokenList[j].type === "command") {
+							if(tokenList[j].text === "left") depth++;
+							if(tokenList[j].text === "right") {
+								depth--;
+								if(depth == 0) {
+									endIndex = j;
+									break;
+								}
+							}
+						}
+					}
+					if(endIndex === null) {
+						throw "Too many `\\left`s"
+					}
+					tokenList[i] = {
+						mode: "AST",
+						type: "grouping",
+						openingSymbol: tokenList[i+1].text,
+						closingSymbol: tokenList[j+1].text,
+						contents: parseLaTeXTokenList(tokenList.slice(i+2,j))
+					}
+					tokenList.splice(i+1,j-i+1)
+					break
 				case "right":
+					throw "Too many `\\right`s"
 			}
 		}
 	}
