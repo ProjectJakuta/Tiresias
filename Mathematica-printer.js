@@ -180,6 +180,10 @@ function printMathematicaExpr(AST) {
 			trigFunction += "Arc";
 			startIndex = 3 
     	}
+    	if (AST.operator[0] === "a" && AST.operator[1] !== "r") {
+    		trigFunction += "Arc";
+    		startIndex = 1
+    	}
     	var firstLetter = AST.operator.substring(startIndex,startIndex+1);
     	var tail = AST.operator.substring(startIndex+1);
     	trigFunction += firstLetter.toUpperCase() + tail; 
