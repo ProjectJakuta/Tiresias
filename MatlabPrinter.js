@@ -96,3 +96,45 @@ function printGrouping(AST) {
   if ((AST.openingSymbol === "|") && (AST.closingSymbol === "|"))
         return "abs(" + printMatlabExpr(AST.contents) + ")";
 }
+
+function printTrig(AST) {
+  var trigFunction = AST.operator
+  if (AST.operator[0] === "a" && AST.operator[1] === "r") {
+    trigFunction = AST.operator[0] + AST.operator.substring(3)
+  }
+  if (AST.operator === "ln")
+    trigFunction = log
+  if (AST.operator === "log")
+    trigFunction = "log10"
+  return trigFunction + "(" + printMatlabExpr(argument) + ")";
+}
+
+function printFunction(AST) {
+  var functionArgs = "";
+      if (AST.argument.length > 0) {
+        AST.argument.forEach(function(arg){
+          functionArgs + printMatlabExpr(arg) + ",";
+        });
+        // remove extra "," at end of functionArgs
+        functionArgs = functionArgs.substring(0,functionArgs.length - 1);
+      }
+        return AST.name + "(" +  functionArgs  + ")";
+}
+
+function printRelational(AST) {
+  switch(AST.subType) {
+      case "==": 
+        return "(" + printMatlabExpr(AST.LHS) + ")==(" + printMatlabExpr(AST.RHS) + ")";
+      case "<":
+        return "(" + printMatlabExpr(AST.LHS) + ")<(" + printMatlabExpr(AST.RHS) + ")";
+      case ">":
+        return "(" + printMatlabExpr(AST.LHS) + ")>(" + printMatlabExpr(AST.RHS) + ")";
+      case "<=":
+        return "(" + printMatlabExpr(AST.LHS) + ")<=(" + printMatlabExpr(AST.RHS) + ")";
+      case ">=":
+        return "(" + printMatlabExpr(AST.LHS) + ")>=(" + printMatlabExpr(AST.RHS) + ")";
+      case "!=":
+        return "(" + printMatlabExpr(AST.LHS) + ")~=(" + printMatlabExpr(AST.RHS) + ")";
+      case "approx": 
+        return "TildeTilde[" + printMatlabExpr(AST.LHS) + "," + printMatlabExpr(AST.RHS) + "]";
+}
