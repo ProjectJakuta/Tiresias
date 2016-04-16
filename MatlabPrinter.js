@@ -70,25 +70,29 @@ function printGreek(AST) {
 }
 
 function printUnaryOperator(AST) {
-  var preSymbol = "";
-  var postSymbol = "";
   switch (AST.subType){
     case "not":
-       preSymbol = "\\neg ";
-       break;
+      return "not(" + printMatlabExpr(AST.operand) + ")" ;
+      break;
     case "-":
-      preSymbol = "-";
-    case "+/-":
-       preSymbol = "\\pm ";
-       break;
-    case "-/+":
-       preSymbol = "\\mp ";
-       break;
+      return "-(" + printMatlabExpr(AST.operand) + ")" ;
+      break;
     case "factorial":
-      return "fraction(" + printMatlabExpr()
+      return "factorial(" + printMatlabExpr(AST.operand) + ")" ;
       break;
     case "sqrt":
       return "sqrt(" + printMatlabExpr(AST.operand) + ")" ;
+      break;
   }
-  return preSymbol + printMatlabExpr(AST.operand) + postSymbol;
+}
+
+function printGrouping(AST) {
+  if (((AST.openingSymbol === "(") || (AST.openingSymbol === "[") 
+    || (AST.openingSymbol === "{")) 
+    && ((AST.closingSymbol === ")") || (AST.closingSymbol === "]") 
+    || (AST.closingSymbol === "}") )) {
+    return "(" + printMatlabExpr(AST.contents) + ")";
+  } 
+  if ((AST.openingSymbol === "|") && (AST.closingSymbol === "|"))
+        return "abs(" + printMatlabExpr(AST.contents) + ")";
 }
