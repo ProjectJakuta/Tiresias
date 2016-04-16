@@ -53,22 +53,22 @@ function printMathematicaExpr(AST) {
     case "relational":
         switch(AST.subType) {
 			case "==": 
-				return "(" + printMathematicaExpr(LHS) + ")==(" + printMathematicaExpr(RHS) + ")";
+				return "(" + printMathematicaExpr(AST.LHS) + ")==(" + printMathematicaExpr(AST.RHS) + ")";
 				break;
 			case "<":
-				return "(" + printMathematicaExpr(LHS) + ")<(" + printMathematicaExpr(RHS) + ")";
+				return "(" + printMathematicaExpr(AST.LHS) + ")<(" + printMathematicaExpr(AST.RHS) + ")";
 				break;
 			case ">":
-				return "(" + printMathematicaExpr(LHS) + ")>(" + printMathematicaExpr(RHS) + ")";
+				return "(" + printMathematicaExpr(AST.LHS) + ")>(" + printMathematicaExpr(AST.RHS) + ")";
 				break;
 			case "<=":
-				return "(" + printMathematicaExpr(LHS) + ")<=(" + printMathematicaExpr(RHS) + ")";
+				return "(" + printMathematicaExpr(AST.LHS) + ")<=(" + printMathematicaExpr(AST.RHS) + ")";
 				break;
 			case ">=":
-				return "(" + printMathematicaExpr(LHS) + ")>=(" + printMathematicaExpr(RHS) + ")";
+				return "(" + printMathematicaExpr(AST.LHS) + ")>=(" + printMathematicaExpr(AST.RHS) + ")";
 				break;
 			case "!=":
-				return "(" + printMathematicaExpr(LHS) + ")!=(" + printMathematicaExpr(RHS) + ")";
+				return "(" + printMathematicaExpr(AST.LHS) + ")!=(" + printMathematicaExpr(AST.RHS) + ")";
 				break;
 			case "~": 
 				// not supported in Mathematica
@@ -78,58 +78,46 @@ function printMathematicaExpr(AST) {
     case "binaryOperator":
 		switch(AST.subType) {
 			case "implicitMultiply":
-				return ("(" + printMathematicaExpr(leftOp) + ") (" 
-					+ printMathematicaExpr(rightOp) + ")"); 
-				break;
+				return ("(" + printMathematicaExpr(AST.leftOp) + ") (" 
+					+ printMathematicaExpr(AST.rightOp) + ")"); 
 			case "*":
-				return ("(" + printMathematicaExpr(leftOp) + ")*(" 
-					+ printMathematicaExpr(rightOp) + ")"); 
-				break;
+				return ("(" + printMathematicaExpr(AST.leftOp) + ")*(" 
+					+ printMathematicaExpr(AST.rightOp) + ")"); 
 			case "+":
-				return ("(" + printMathematicaExpr(leftOp) + ")+(" 
-					+ printMathematicaExpr(rightOp) + ")"); 
-				break;
+				return ("(" + printMathematicaExpr(AST.leftOp) + ")+(" 
+					+ printMathematicaExpr(AST.rightOp) + ")"); 
 			case "-":
-				return ("(" + printMathematicaExpr(leftOp) + ")-(" 
-					+ printMathematicaExpr(rightOp) + ")"); 
-				break;
+				return ("(" + printMathematicaExpr(AST.leftOp) + ")-(" 
+					+ printMathematicaExpr(AST.rightOp) + ")"); 
 			case "/":
-				return ("(" + printMathematicaExpr(leftOp) + ")/(" 
-					+ printMathematicaExpr(rightOp) + ")"); 
-				break;
+				return ("(" + printMathematicaExpr(AST.leftOp) + ")/(" 
+					+ printMathematicaExpr(AST.rightOp) + ")"); 
 			case "^":
-				return ("Exponent[" + printMathematicaExpr(leftOp) + "," 
-					+ printMathematicaExpr(rightOp) + "]"); 
-				break;
+				return ("Exponent[" + printMathematicaExpr(AST.leftOp) + "," 
+					+ printMathematicaExpr(AST.rightOp) + "]"); 
 			case "%":
-				return ("Mod[" + printMathematicaExpr(leftOp) + "," 
-					+ printMathematicaExpr(rightOp) + "]"); 
-				break;
+				return ("Mod[" + printMathematicaExpr(AST.leftOp) + "," 
+					+ printMathematicaExpr(AST.rightOp) + "]"); 
 			case "cross":
-				return ("Cross[" + printMathematicaExpr(leftOp) + "," 
-					+ printMathematicaExpr(rightOp) + "]"); 
-				break;
+				return ("Cross[" + printMathematicaExpr(AST.leftOp) + "," 
+					+ printMathematicaExpr(AST.rightOp) + "]"); 
 			case "dot":
-				return ("(" + printMathematicaExpr(leftOp) + ").(" 
-					+ printMathematicaExpr(rightOp) + ")"); 
-				break;
+				return ("(" + printMathematicaExpr(AST.leftOp) + ").(" 
+					+ printMathematicaExpr(AST.rightOp) + ")"); 
 			case "+/-":
-				return ("PlusMinus[" + printMathematicaExpr(leftOp) + "," 
-					+ printMathematicaExpr(rightOp) + "]"); 
-				break;
+				return ("PlusMinus[" + printMathematicaExpr(AST.leftOp) + "," 
+					+ printMathematicaExpr(AST.rightOp) + "]"); 
 			case "-/+":
-				return ("MinusPlus[" + printMathematicaExpr(leftOp) + "," 
-					+ printMathematicaExpr(rightOp) + "]"); 
-				break;
+				return ("MinusPlus[" + printMathematicaExpr(AST.leftOp) + "," 
+					+ printMathematicaExpr(AST.rightOp) + "]"); 
 			case "subscript":
-				return ("Subscript[" + printMathematicaExpr(leftOp) + "," 
-					+ printMathematicaExpr(rightOp) + "]"); 
-				break;
+				return ("Subscript[" + printMathematicaExpr(AST.leftOp) + "," 
+					+ printMathematicaExpr(AST.rightOp) + "]"); 
 			case "nthroot":
 				// rightOp = argument
 				// Note: square root is a unary operator
-				return ("Surd[" + printMathematicaExpr(rightOp) + "," 
-					+ printMathematicaExpr(leftOp) + "]");
+				return ("Surd[" + printMathematicaExpr(AST.rightOp) + "," 
+					+ printMathematicaExpr(AST.leftOp) + "]");
 			default:
 				// TODO: error for unknown subType of binary Operator
 		}
@@ -138,23 +126,17 @@ function printMathematicaExpr(AST) {
     	//TODO: Stuff
     	switch(AST.subType) {
     		case "not":
-    			"Not[" + printMathematicaExpr(AST.operand) + "]";
-    			break;
+    			return "Not[" + printMathematicaExpr(AST.operand) + "]";
     		case "-":
     			return "Negative[" + printMathematicaExpr(AST.operand) + "]";
-    			break;
     		case "+/-":
-    			"PlusMinus[" + printMathematicaExpr(AST.operand) + "]";
-    			break;
+    			return "PlusMinus[" + printMathematicaExpr(AST.operand) + "]";
     		case "-/+":
-    			"MinusPlus[" + printMathematicaExpr(AST.operand) + "]";
-    			break;
+    			return "MinusPlus[" + printMathematicaExpr(AST.operand) + "]";
     		case "factorial":
-    			"(" + printMathematicaExpr(AST.operand) + ")!";
-    			break;
+    			return "(" + printMathematicaExpr(AST.operand) + ")!";
     		case "sqrt":
-    			"Sqrt[" + printMathematicaExpr(AST.operand) + "]";
-    			break;
+    			return "Sqrt[" + printMathematicaExpr(AST.operand) + "]";
     		default:
     			// TODO: error for unknown subType of unary operator
     	}

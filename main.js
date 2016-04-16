@@ -27,9 +27,11 @@ $("#submit").click(function() {try{
 	};
 
 	// Output
-	try {$("textarea#latexOutput").val(printLaTeXExpr(theAst))} catch(e){}
-	try {$("textarea#mathematicaOutput").val(printMathematicaExpr(theAst))} catch(e){}
-	try {$("textarea#matlabOutput").val(JSON.stringify(theAst))} catch(e){}
+	try {$("textarea#latexOutput").val(printLaTeXExpr(theAst))}catch(e){console.log(e)}
+	try {
+		$("textarea#mathematicaOutput").val(printMathematicaExpr(theAst))
+	}catch(e){console.log(e)}
+	try {$("textarea#matlabOutput").val(JSON.stringify(theAst))}catch(e){console.log(e)}
 	return false;
 }catch(e){console.log(e);return false}});
 
