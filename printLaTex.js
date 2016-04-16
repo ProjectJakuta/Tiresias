@@ -238,6 +238,10 @@ function printFunction(AST) {
   for (i = 0; i < AST.argument.length-1; i++) {
     returnString += (printLaTeXExpr(AST.argument[i]) + ", ");
   }
-  returnString += (printLaTeXExpr(AST.argument[AST.argument.length - 1]) + ")");
+  console.log(AST);
+  console.log(AST.argument);
+  console.log(AST.argument.length - 1);
+  console.log(AST.argument[AST.argument.length - 1]);
+  returnString += printLaTeXExpr(AST.argument[AST.argument.length - 1]) + ")";
   return returnString;
 }
