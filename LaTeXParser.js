@@ -49,7 +49,7 @@ tokenizeLaTeX = function(equation, start) {
 				break
 			case 5:
 			case 10:
-				break
+				tokenList.push({mode: "token", type: "space", text: equation[i]})
 			case 7:
 				tokenList.push({mode: "token", type: "superscript"})
 				break
@@ -168,6 +168,39 @@ parseLaTeXTokenList = function(tokenList) {
 					break
 				case "right":
 					throw "Too many `\\right`s"
+			}
+		}
+	}
+	var startIndices = []
+	for(var i = 0; i < tokenList.length; i++) {
+		if(tokenList[i].mode !== "token") continue;
+		if("text" in tokenList[i] && $.inArray(tokenList[i].text,
+				['{','[','(','|'])>0) {
+			if(!(tokenList[i].text === '|' &&
+					startIndices.length > 0 &&
+					startIndices[startIndices.length - 1].isAbs)) {
+				console.log('start',i)
+				startIndices.push({index: i, isAbs: tokenList[i].text === '|'});
+				continue
+			}
+		}
+		if("text" in tokenList[i] && $.inArray(tokenList[i].text,
+				['}',']',')','|'])>0) {
+			if(tokenList[i].text !== '|' || (
+					startIndices.length > 0 &&
+					startIndices[startIndices.length - 1].isAbs)) {
+				console.log('end',i)
+				var start = startIndices.pop().index;
+				tokenList[start] = {
+					mode: "AST",
+					type: "grouping",
+					openingSymbol: tokenList[start].text,
+					closingSymbol: tokenList[i].text,
+					contents: parseLaTeXTokenList(tokenList.slice(start+1,i))
+				}
+				tokenList.splice(start+1,i-start)
+				i = start
+				continue
 			}
 		}
 	}
