@@ -1,18 +1,30 @@
-//Standard form
-
-// Function f[x1,x2,...]
-// String " "
-// Binary 
-// Unary Factorial
-// 
-
-//write f'n that prints eqn(takes in an ast)
-//  use switch statements to print each different type (very recursive)
-
+/*
+ * We print Mathematica code in StandardForm
+ */
 function printMathematicaExpr(AST) {
 	switch(AST.type) {
     case "combinator":
-    	//TODO: Stuff
+    	switch(AST.subType) {
+    		case "integral":
+    		case "sum":
+    		case "product":
+    			// TODO: take care of case with no upperLimit and/or lowerLimit
+    			var firstChar = AST.subType.substring(0,1);
+    			return (firstChar.toUpperCase() + AST.subType.substring(1) + "[" 
+    				+ printMathematicaExpr(AST.contents) ",{" + printMathematicaExpr(variable) 
+    				+ "," + printMathematicaExpr(minLimit)+ "," + printMathematicaExpr(maxLimit) 
+    				+ "}]");
+    			break;
+    		case "lim":
+    			return ("Limit[(" + printMathematicaExpr(AST.contents) + ")," 
+    				+ printMathematicaExpr(AST.variable) + "->" 
+    				+ printMathematicaExpr(AST.minLimit) + "]");
+    			break;
+    		case "union":
+    		case "intersect":
+    		default;
+    			// TODO: error for unknown subType of combinator
+    	}
 
         printMathematicaExpr();
         break;
@@ -20,11 +32,13 @@ function printMathematicaExpr(AST) {
     	//TODO: Stuff
     	//for each thing in argument list, 
     	var functionArgs = "";
-    	for each (arg in AST.argument) {
-    		functionArgs + printMathematicaExpr(arg) + ",";
+    	if (AST.argument.length > 0) {
+	    	for (arg in AST.argument) {
+	    		functionArgs + printMathematicaExpr(arg) + ",";
+	    	}
+	    	// remove extra "," at end of functionArgs
+    		functionArgs = functionArgs.substring(0,functionArgs.length - 2);
     	}
-    	// remove extra "," at end of functionArgs
-    	functionArgs = functionArgs.substring(0,functionArgs.length - 2);
         return AST.name + "[" +  functionArgs	 + "]";
         break;
     case "constant":
@@ -64,38 +78,58 @@ function printMathematicaExpr(AST) {
     case "binaryOperator":
 		switch(AST.subType) {
 			case "implicitMultiply":
-				return "(" + printMathematicaExpr(leftOp) + ") (" + printMathematicaExpr(rightOp) + ")"; 
+				return ("(" + printMathematicaExpr(leftOp) + ") (" 
+					+ printMathematicaExpr(rightOp) + ")"); 
 				break;
 			case "*":
-				return "(" + printMathematicaExpr(leftOp) + ")*(" + printMathematicaExpr(rightOp) + ")"; 
+				return ("(" + printMathematicaExpr(leftOp) + ")*(" 
+					+ printMathematicaExpr(rightOp) + ")"); 
 				break;
 			case "+":
-				return "(" + printMathematicaExpr(leftOp) + ")+(" + printMathematicaExpr(rightOp) + ")"; 
+				return ("(" + printMathematicaExpr(leftOp) + ")+(" 
+					+ printMathematicaExpr(rightOp) + ")"); 
 				break;
 			case "-":
-				return "(" + printMathematicaExpr(leftOp) + ")-(" + printMathematicaExpr(rightOp) + ")"; 
+				return ("(" + printMathematicaExpr(leftOp) + ")-(" 
+					+ printMathematicaExpr(rightOp) + ")"); 
 				break;
 			case "/":
-				return "(" + printMathematicaExpr(leftOp) + ")/(" + printMathematicaExpr(rightOp) + ")"; 
+				return ("(" + printMathematicaExpr(leftOp) + ")/(" 
+					+ printMathematicaExpr(rightOp) + ")"); 
 				break;
 			case "^":
-				return "Exponent[" + printMathematicaExpr(leftOp) + "," + printMathematicaExpr(rightOp) + "]"; 
+				return ("Exponent[" + printMathematicaExpr(leftOp) + "," 
+					+ printMathematicaExpr(rightOp) + "]"); 
 				break;
 			case "%":
-				return "Mod[" + printMathematicaExpr(leftOp) + "," + printMathematicaExpr(rightOp) + "]"; 
+				return ("Mod[" + printMathematicaExpr(leftOp) + "," 
+					+ printMathematicaExpr(rightOp) + "]"); 
 				break;
 			case "cross":
-				return "Cross[" + printMathematicaExpr(leftOp) + "," + printMathematicaExpr(rightOp) + "]"; 
+				return ("Cross[" + printMathematicaExpr(leftOp) + "," 
+					+ printMathematicaExpr(rightOp) + "]"); 
 				break;
 			case "dot":
-				return "(" + printMathematicaExpr(leftOp) + ").(" + printMathematicaExpr(rightOp) + ")"; 
+				return ("(" + printMathematicaExpr(leftOp) + ").(" 
+					+ printMathematicaExpr(rightOp) + ")"); 
 				break;
 			case "+/-":
-				return "PlusMinus[" + printMathematicaExpr(leftOp) + "," + printMathematicaExpr(rightOp) + "]"; 
+				return ("PlusMinus[" + printMathematicaExpr(leftOp) + "," 
+					+ printMathematicaExpr(rightOp) + "]"); 
 				break;
 			case "-/+":
-				return "MinusPlus[" + printMathematicaExpr(leftOp) + "," + printMathematicaExpr(rightOp) + "]"; 
+				return ("MinusPlus[" + printMathematicaExpr(leftOp) + "," 
+					+ printMathematicaExpr(rightOp) + "]"); 
 				break;
+			case "subscript":
+				return ("Subscript[" + printMathematicaExpr(leftOp) + "," 
+					+ printMathematicaExpr(rightOp) + "]"); 
+				break;
+			case "nthroot":
+				// rightOp = argument
+				// Note: square root is a unary operator
+				return ("Surd[" + printMathematicaExpr(rightOp) + "," 
+					+ printMathematicaExpr(leftOp) + "]");
 			default:
 				// TODO: error for unknown subType of binary Operator
 		}
@@ -104,24 +138,30 @@ function printMathematicaExpr(AST) {
     	//TODO: Stuff
     	switch(AST.subType) {
     		case "not":
-    			"Not[" + print(AST.operand) + "]";
+    			"Not[" + printMathematicaExpr(AST.operand) + "]";
     			break;
     		case "-":
-    			return "Negative[" + print(AST.operand) + "]";
+    			return "Negative[" + printMathematicaExpr(AST.operand) + "]";
     			break;
     		case "+/-":
-    			"PlusMinus[" + print(AST.operand) + "]";
+    			"PlusMinus[" + printMathematicaExpr(AST.operand) + "]";
     			break;
     		case "-/+":
-    			"MinusPlus[" + print(AST.operand) + "]";
+    			"MinusPlus[" + printMathematicaExpr(AST.operand) + "]";
     			break;
     		case "factorial":
-    			"(" + print(AST.operand) + ")!";
+    			"(" + printMathematicaExpr(AST.operand) + ")!";
+    			break;
+    		case "sqrt":
+    			"Sqrt[" + printMathematicaExpr(AST.operand) + "]";
     			break;
     		default:
     			// TODO: error for unknown subType of unary operator
     	}
         break;
+    case "fraction":
+    	//TODO: Stuff
+    	break;
     case "grouping":
     	// TODO: should we check if contents are empty?
     	return AST.openingSymbol + printMathematicaExpr(AST.contents) + AST.closingSymbol;
