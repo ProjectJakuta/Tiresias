@@ -45,6 +45,7 @@ function printBinaryOperator(AST) {
       break;
     case "+/-":
       symbol = "\\pm ";
+      break
     case "-/+":
       symbol = "\\mp ";
       break;
@@ -60,9 +61,11 @@ function printBinaryOperator(AST) {
     case "nthroot":
       return "\\sqrt [" + printLaTeXExpr(AST.leftOp) + "]{" + printLaTeXExpr(AST.rightOp) + "}"; 
     case "implicitMultiply":
-      printLaTeXExpr(AST.leftOp) + printLaTeXExpr(AST.rightOp);
+      return printLaTeXExpr(AST.leftOp) + printLaTeXExpr(AST.rightOp);
     case "^":
       return printLaTeXExpr(AST.leftOp) + "^{" + printLaTeXExpr(AST.rightOp) + "}";
+    case "subscript":
+      return printLaTeXExpr(AST.leftOp) + "_{" + printLaTeXExpr(AST.rightOp) + "}";
   }
   return printLaTeXExpr(AST.leftOp) + symbol + printLaTeXExpr(AST.rightOp);
 }
@@ -122,6 +125,7 @@ function printUnaryOperator(AST) {
        break;
     case "-":
       preSymbol = "-";
+      break
     case "+/-":
        preSymbol = "\\pm ";
        break;

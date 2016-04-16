@@ -40,7 +40,7 @@ tokenizeLaTeX = function(equation, start) {
 				break
 			case 1:
 				subgroup = tokenizeLaTeX(equation, i+1)
-				tokenList.push({mode: "AST", text: parseLaTeXTokenList(subgroup.tl)})
+				tokenList.push(parseLaTeXTokenList(subgroup.tl))
 				i = subgroup.end
 				break
 			case 2:
@@ -272,9 +272,162 @@ parseLaTeXTokenList = function(tokenList) {
 				}
 			}
 		}
+		if(tokenList[i].type === "space") {
+			tokenList.splice(i,1)
+			i--
+		}
 	}
-	for(var i = 0; i < tokenList.length; i++) {
-
+	for(var i = 1; i < tokenList.length-1; i++) {
+		if(tokenList[i].type === "subscript") {
+			tokenList[i-1] = {
+				mode: "AST",
+				type: "binaryOperator",
+				subType: "subscript",
+				leftOp: tokenList[i-1],
+				rightOp: tokenList[i+1]
+			}
+			tokenList.splice(i,2)
+			i--
+		}
+	}
+	for(var i = 1; i < tokenList.length-1; i++) {
+		if(tokenList[i].type === "superscript") {
+			tokenList[i-1] = {
+				mode: "AST",
+				type: "binaryOperator",
+				subType: "^",
+				leftOp: tokenList[i-1],
+				rightOp: tokenList[i+1]
+			}
+			tokenList.splice(i,2)
+			i--
+		}
+	}
+	for(var i = 1; i < tokenList.length-1; i++) {
+		if((tokenList[i].type === "other" && tokenList[i].text === "*") ||
+				(tokenList[i].type === "command" && tokenList[i].text === "times")) {
+			tokenList[i-1] = {
+				mode: "AST",
+				type: "binaryOperator",
+				subType: "*",
+				leftOp: tokenList[i-1],
+				rightOp: tokenList[i+1]
+			}
+			tokenList.splice(i,2)
+			i--
+		}
+		if(tokenList[i].type === "other" && tokenList[i].text === "/") {
+			tokenList[i-1] = {
+				mode: "AST",
+				type: "binaryOperator",
+				subType: "/",
+				leftOp: tokenList[i-1],
+				rightOp: tokenList[i+1]
+			}
+			tokenList.splice(i,2)
+			i--
+		}
+	}
+	for(var i = 0; i < tokenList.length-1; i++) {
+		if(tokenList[i].mode === "AST" && tokenList[i+1].mode === "AST") {
+			tokenList[i] = {
+				mode: "AST",
+				type: "binaryOperator",
+				subType: "implicitMultiply",
+				leftOp: tokenList[i],
+				rightOp: tokenList[i+1]
+			}
+			tokenList.splice(i+1,1)
+			i--
+		}
+	}
+	for(var i = 0; i < tokenList.length-1; i++) {
+		if(tokenList[i].type === "other" && tokenList[i].text === "+" &&
+				(i === 0 || tokenList[i-1].mode !== "AST")) {
+			tokenList[i] = {
+				mode: "AST",
+				type: "unaryOperator",
+				subType: "+",
+				operand: tokenList[i+1]
+			}
+			tokenList.splice(i+1,1)
+		}
+		if(tokenList[i].type === "other" && tokenList[i].text === "-" &&
+				(i === 0 || tokenList[i-1].mode !== "AST")) {
+			tokenList[i] = {
+				mode: "AST",
+				type: "unaryOperator",
+				subType: "-",
+				operand: tokenList[i+1]
+			}
+			tokenList.splice(i+1,1)
+		}
+		if(tokenList[i].type === "command" && tokenList[i].text === "mp" &&
+				(i === 0 || tokenList[i-1].mode !== "AST")) {
+			tokenList[i] = {
+				mode: "AST",
+				type: "unaryOperator",
+				subType: "-/+",
+				operand: tokenList[i+1]
+			}
+			tokenList.splice(i+1,1)
+		}
+		if(tokenList[i].type === "command" && tokenList[i].text === "pm" &&
+				(i === 0 || tokenList[i-1].mode !== "AST")) {
+			tokenList[i] = {
+				mode: "AST",
+				type: "unaryOperator",
+				subType: "+/-",
+				operand: tokenList[i+1]
+			}
+			tokenList.splice(i+1,1)
+		}
+	}
+	for(var i = 1; i < tokenList.length-1; i++) {
+		if(tokenList[i].type === "other" && tokenList[i].text === "+") {
+			tokenList[i-1] = {
+				mode: "AST",
+				type: "binaryOperator",
+				subType: "+",
+				leftOp: tokenList[i-1],
+				rightOp: tokenList[i+1]
+			}
+			tokenList.splice(i,2)
+			i--
+		}
+		if(tokenList[i].type === "other" && tokenList[i].text === "-") {
+			tokenList[i-1] = {
+				mode: "AST",
+				type: "binaryOperator",
+				subType: "-",
+				leftOp: tokenList[i-1],
+				rightOp: tokenList[i+1]
+			}
+			tokenList.splice(i,2)
+			i--
+		}
+		if(tokenList[i].type === "command" && tokenList[i].text === "pm") {
+			tokenList[i-1] = {
+				mode: "AST",
+				type: "binaryOperator",
+				subType: "+/-",
+				leftOp: tokenList[i-1],
+				rightOp: tokenList[i+1]
+			}
+			tokenList.splice(i,2)
+			i--
+		}
+		if(tokenList[i].type === "command" && tokenList[i].text === "mp") {
+			tokenList[i-1] = {
+				mode: "AST",
+				type: "binaryOperator",
+				subType: "-/+",
+				leftOp: tokenList[i-1],
+				rightOp: tokenList[i+1]
+			}
+			tokenList.splice(i,2)
+			i--
+		}
 	}
 	if(tokenList.length !== 1) {
 		// It's probably multiple ASTs seperated by commas...
