@@ -237,14 +237,10 @@ parseLaTeXTokenList = function(tokenList) {
 				mode: "AST",
 				type: "function",
 				name: tokenList[i].text,
-				argument: [tokenList[i+1].contents]
+				argument: [].concat(tokenList[i+1].contents)
 			}
 			tokenList.splice(i+1,1)
 		}
-	}
-	if(tokenList.length !== 1) {
-		console.log(tokenList)
-		throw "Invalid LaTeX"
 	}
 	for(var i = 0; i < tokenList.length; i++) {
 		if(tokenList[i].mode !== "token") continue;
@@ -276,6 +272,19 @@ parseLaTeXTokenList = function(tokenList) {
 				}
 			}
 		}
+	}
+	for(var i = 0; i < tokenList.length; i++) {
+
+	}
+	if(tokenList.length !== 1) {
+		// It's probably multiple ASTs seperated by commas...
+		for(var i = 0; i < tokenList.length; i++) {
+			if(tokenList[i].mode !== "AST") {
+				tokenList.splice(i,1)
+				i--
+			}
+		}
+		return tokenList
 	}
 	return tokenList[0]
 }
