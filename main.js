@@ -27,9 +27,9 @@ $("#submit").click(function() {
 	};
 
 	// Output
-	$("textarea#latexOutput").val(printLaTeXExpr(theAst))
-	$("textarea#mathematicaOutput").val(printMathematicaExpr(theAst))
-	$("textarea#matlabOutput").val(JSON.stringify(theAst))
+	try {$("textarea#latexOutput").val(printLaTeXExpr(theAst))} catch(e){}
+	try {$("textarea#mathematicaOutput").val(printMathematicaExpr(theAst))} catch(e){}
+	try {$("textarea#matlabOutput").val(JSON.stringify(theAst))} catch(e){}
 	return false;
 });
 

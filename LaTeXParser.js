@@ -55,6 +55,10 @@ tokenizeLaTeX = function(equation) {
 				tokenList.push({type: "subscript"})
 				break
 			case 9: break
+			case 10:
+				tokenList.push({type: "letter", value: equation[i]})
+			case 11:
+				
 			case 13:
 				tokenList.push({type: "command", name: equation[i]})
 				break
