@@ -1,91 +1,6 @@
 
 
 
-easyAST = {
-  
-  type: "relational",
-  leftOp: {
- 
-  type: "binaryOperator", 
-  leftOp: {
-    type: "binaryOperator",
-    leftOp: {
-      type: "trig",
-      operator: "sin",
-      argument: {
-      type: "constant",
-      value: "3"
-    }
-    },
-    rightOp: {
-      type: "constant",
-      value: "5"
-    },
-    subType: "+"
-  },
-  rightOp: {
-    type: "fraction",
-    numerator: {
-      type: "latin",
-      name: "x"
-    },
-    denominator: {
-       type: "constant",
-       value: "8"
-    }
-  },
-  subType: "+/-"
-},
-  rightOp: {
-  type: "binaryOperator", 
-  leftOp: { 
-    type: "unaryOperator",
-    subType: "sqrt",
-    operand: { 
-      type: "constant",
-      value: "3"
-    }},
-   rightOp: {
-     type: "constant",
-      value: "9"
-   },
-   subType: "^"
-  },
-  subType: "congruent"
-}
-
-
-newAST = {
-  type: "combinator",
-  subType: "integral",
-  contents: {
-    type: "grouping",
-    openingSymbol: "(",
-    closingSymbol: ")",
-    contents: {
-      type: "constant",
-      value: "8"
-    }
-  },
-  variable: {
-    type: "latin",
-    name: "v",
-  },
-  maxLimit: {
-    type: "latin",
-    name: "2t",
-  },
-   minLimit: {
-    type: "latin",
-    name: "t",
-  }
-}
-
-
-
-  
-
-
 
 function printLaTeXExpr(AST) {
   switch(AST.type){
@@ -270,7 +185,3 @@ function printCombinator(AST){
 function printTrig(AST) {
   return "\\" + AST.operator + "{(" + printLaTeXExpr(AST.argument) + ")}";
 }
-
-
-
-printLaTeXExpr(newAST);
