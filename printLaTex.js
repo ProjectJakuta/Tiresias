@@ -57,7 +57,7 @@ To start with...
 
 
 
-function printExpr(AST) {
+function printLaTeXExpr(AST) {
   switch(AST.type){
     case "constant":
       return printConstant(AST);
@@ -94,11 +94,11 @@ function printBinaryOperator(AST) {
       symbol = "\\mod";
       break;
     case "implicitMultiply":
-      printExpr(AST.leftOp) + printExpr(AST.rightOp);
+      printLaTeXExpr(AST.leftOp) + printLaTeXExpr(AST.rightOp);
     case "^":
-      return printExpr(AST.leftOp) + "^{" + printExpr(AST.rightOp) + "}";
+      return printLaTeXExpr(AST.leftOp) + "^{" + printLaTeXExpr(AST.rightOp) + "}";
   }
-  return "(" + printExpr(AST.leftOp) + symbol + printExpr(AST.rightOp) + ")";
+  return "(" + printLaTeXExpr(AST.leftOp) + symbol + printLaTeXExpr(AST.rightOp) + ")";
 }
 
 
@@ -121,7 +121,7 @@ function printRoman(AST) {
 
 
 function printFraction(AST) {
-  return "\\frac{" + printExpr(AST.numerator) + "}{" + printExpr(AST.denominator) + "}";
+  return "\\frac{" + printLaTeXExpr(AST.numerator) + "}{" + printLaTeXExpr(AST.denominator) + "}";
 }
 
 function printRelational(AST){
@@ -141,10 +141,10 @@ function printRelational(AST){
     case "congruent":
       symbol = "\\equiv";
   }
-  return printExpr(AST.leftOp) + symbol + printExpr(AST.rightOp);
+  return printLaTeXExpr(AST.leftOp) + symbol + printLaTeXExpr(AST.rightOp);
 }
 
 
 
-printExpr(easyAST);
+//printLaTeXExpr(easyAST);
 
