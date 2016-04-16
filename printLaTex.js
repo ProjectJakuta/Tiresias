@@ -1,5 +1,4 @@
 
-
 function printLaTeXExpr(AST) {
   switch(AST.type){
     case "constant":
@@ -139,11 +138,20 @@ function printUnaryOperator(AST) {
 
 
 function printGrouping(AST){
-  if (AST.openingSymbol === "(" || AST.openingSymbol === "[" || AST.closingSymbol === ")" || AST.closingSymbol === "]") {
-    
+  if (AST.openingSymbol === "{"){
+    AST.openingSymbol = "\\" + AST.openingSymbol;
+    AST.closingSymbol = "\\" + AST.closingSymbol; 
   }
-  return "\\left(" + printLaTeXExpr(AST.contents) + "\\right)";
-}
+  if (AST.openingSymbol === "("){
+    AST.openingSymbol = "\\left(";
+    AST.closingSymbol = "\\right)"; 
+  }
+   if (AST.openingSymbol === "["){
+    AST.openingSymbol = "\\left[";
+    AST.closingSymbol = "\\right]"; 
+  }
+  return AST.openingSymbol + printLaTeXExpr(AST.contents) + AST.closingSymbol;  
+  }
 
 
 function printCombinator(AST){
