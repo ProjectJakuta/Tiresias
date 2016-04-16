@@ -175,21 +175,19 @@ parseLaTeXTokenList = function(tokenList) {
 	for(var i = 0; i < tokenList.length; i++) {
 		if(tokenList[i].mode !== "token") continue;
 		if("text" in tokenList[i] && $.inArray(tokenList[i].text,
-				['{','[','(','|'])>0) {
+				['{','[','(','|'])>=0) {
 			if(!(tokenList[i].text === '|' &&
 					startIndices.length > 0 &&
 					startIndices[startIndices.length - 1].isAbs)) {
-				console.log('start',i)
 				startIndices.push({index: i, isAbs: tokenList[i].text === '|'});
 				continue
 			}
 		}
 		if("text" in tokenList[i] && $.inArray(tokenList[i].text,
-				['}',']',')','|'])>0) {
+				['}',']',')','|'])>=0) {
 			if(tokenList[i].text !== '|' || (
 					startIndices.length > 0 &&
 					startIndices[startIndices.length - 1].isAbs)) {
-				console.log('end',i)
 				var start = startIndices.pop().index;
 				tokenList[start] = {
 					mode: "AST",
@@ -203,6 +201,38 @@ parseLaTeXTokenList = function(tokenList) {
 				continue
 			}
 		}
+	}
+	for(var i = 0; i < tokenList.length-1; i++) {
+		if(tokenList[i].mode !== "token") continue;
+		if(tokenList[i].type === "command" && $.inArray(tokenList[i].text,
+				['sin','cos','tan','sec','csc','cot','sinh','cosh','tanh',
+				 'sech','csch','coth','asin','acos','atan','asec','acsc','acot',
+				 'asinh','acosh','atanh','asech','acsch','acoth','log','ln','exp'
+				 ])>=0) {
+			tokenList[i] = {
+				mode: "AST",
+				type: "builtInFunction",
+				operator: tokenList[i].text,
+				argument: tokenList[i+1]
+			}
+			tokenList.splice(i+1,1)
+			i--
+			continue
+		}
+		if(tokenList[i+1].mode === "AST" && tokenList[i+1].type === "grouping" &&
+				tokenList[i+1].openingSymbol === "(" && tokenList[i].type === "letter") {
+			tokenList[i] = {
+				mode: "AST",
+				type: "function",
+				name: tokenList[i].text,
+				argument: tokenList[i+1]
+			}
+			tokenList.splice(i+1,1)
+		}
+	}
+	if(tokenList.length !== 1) {
+		console.log(tokenList)
+		throw "Invalid LaTeX"
 	}
 	return tokenList[0]
 }
