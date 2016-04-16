@@ -1,13 +1,14 @@
 body {
     margin:0;
     padding:0;
-    font-family: Sans-Serif;
+    font-family: Papyrus, Palatino, Sans-Serif;
     font-size: 20px;
     line-height: 1.5em;
+    color: #523A10;
 }
 
 #header {
-    background-color: #72B2A6;
+    background-color: #8CB2A6;
     height: 80px;
 }
 
@@ -16,8 +17,6 @@ body {
     padding-top: 15px;
     font-size: 30px;
     font-weight: bold;
-
-    color: black;
 }
 
 #left {
@@ -25,7 +24,7 @@ body {
     margin-bottom: -10000px;
     float: left;
     width: 50%;
-    background-color: #6C9DD8;
+    background-color: #7CA6D9;
 }
      
 #right {
@@ -34,14 +33,14 @@ body {
     float: left;
     width: 50%;
     float: right;
-    background-color: #86C6FC;
+    background-color: #8ABFED;
 }
 
 #footer {
     font-size: 16px;
     clear: left;
     width: 100%;
-    background-color: #72B2A6;
+    background-color: #8CB2A6;
     text-align: center;
     padding: 4px 0;
 }
@@ -54,7 +53,8 @@ body {
 textarea {
     font-size: 18px;
     text-align: left;
-    font-family: monospace;
+    font-family: monospace, "Courier New";
+    color: #523A10;
     width: 70%;
 }
 
@@ -65,8 +65,4 @@ textarea {
 
 h2 {
     font-size: 27px;
-}
-
-p {
-    color: #555;
 }
