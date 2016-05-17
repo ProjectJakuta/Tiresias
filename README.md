@@ -8,4 +8,4 @@ We used HTML, CSS, Javascript, and jQuery for this project.
 
 The main strategy is to convert the raw text into our intermediate language, and then translate that into LaTeX, Mathematica, and MATLAB.
 
-In the future, we will try to parse other languages such as Mathmetica and MATLAB. We are also looking into parsing Maple (used in physics). In addition, we are interested in integrating WolframAlpha's API in order to parse natural languages and add insight to our output.
+In the future, we will try to parse other languages such as Mathematica and MATLAB. We are also looking into parsing Maple (used in physics). In addition, we are interested in integrating WolframAlpha's API in order to parse natural languages and add insight to our output.
