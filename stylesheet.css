@@ -18,13 +18,13 @@ along with Project Tiresias.  If not, see <http://www.gnu.org/licenses/>.
 @font-face {
     font-family: 'Latin Modern Roman';
     font-weight: normal;
-    src: url('http://images.clonecomputers.net/fonts/lmroman12-regular.otf') format('otf');
+    src: url('https://s3.yancey.io/fonts/lmroman12-regular.otf') format('otf');
 }
 
 @font-face {
     font-family: 'Latin Modern Roman';
     font-weight: bold;
-    src: url('http://images.clonecomputers.net/fonts/lmroman12-bold.otf') format('otf');
+    src: url('https://s3.yancey.io/fonts/lmroman12-bold.otf') format('otf');
 }
 
 body {
@@ -98,7 +98,7 @@ textarea {
     width: 110px;
     border-radius: 3px;
     overflow: hidden;
-    background: #FCF9F2 url("http://www.scottgood.com/jsg/blog.nsf/images/arrowdown.gif") no-repeat 90% 50%;
+    background: #FCF9F2 url("arrowdown.gif") no-repeat 90% 50%;
 }
 
 #dropdown select {
